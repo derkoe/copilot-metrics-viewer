@@ -7,11 +7,11 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve the application with Nginx
-FROM nginx:1.27 AS production-stage
+FROM ghcr.io/nginxinc/nginx-unprivileged:1.27 AS production-stage
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY --from=build-stage /app/dist/assets/app-config.js /usr/share/nginx/html-template/app-config.template.js
-COPY ./docker-entrypoint.d/*.sh /docker-entrypoint.d/
-RUN chmod +x /docker-entrypoint.d/*.sh
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY --chmod=+x ./docker-entrypoint.d/*.sh /docker-entrypoint.d/
+USER root
+RUN chmod a+w /usr/share/nginx/html/assets/ /usr/share/nginx/html/assets/app-config.js
+USER 101
