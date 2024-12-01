@@ -34,5 +34,7 @@ EXPOSE 3000
 # Command to run your API (and serve your Vue.js app)
 RUN chmod +x /api/docker-entrypoint.api/entrypoint.sh
 
+RUN chmod a+w /api/public/assets /api/public/assets/app-config.js
+
 USER node
 ENTRYPOINT ["/api/docker-entrypoint.api/entrypoint.sh"]
